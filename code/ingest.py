@@ -84,8 +84,8 @@ def load_file(path: str) -> str:
 
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
-    chunk_overlap=200,
+    chunk_size=3000,
+    chunk_overlap=300,
 )
 
 

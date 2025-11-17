@@ -23,8 +23,8 @@ if not OPENAPI_API_KEY:
 
 
 def search_pgvector(query: str, limit: int = 5, metadata_filter: Dict = None):
-    embedder = OpenAIEmbeddings(api_key=OPENAPI_API_KEY)
-    query_vector = embedder.embed_query(query)
+    embedder_model = OpenAIEmbeddings(model="text-embedding-3-small", api_key=OPENAPI_API_KEY)
+    query_vector = embedder_model.embed_query(query)
 
     def to_pgvector(vec):
         return "[" + ",".join(str(v) for v in vec) + "]"
