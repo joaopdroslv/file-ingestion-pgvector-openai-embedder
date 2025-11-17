@@ -31,7 +31,7 @@ def ensure_table():
         with conn.cursor() as cur:
             cur.execute(
                 f"""
-            CREATE TABLE IF NOT EXISTS documents (
+            CREATE TABLE IF NOT EXISTS embeddings (
                 id          SERIAL PRIMARY KEY,
                 doc_id      TEXT UNIQUE,
                 content     TEXT,
@@ -50,7 +50,7 @@ def upsert_document(
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO documents (doc_id, content, metadata, embedding)
+                INSERT INTO embeddings (doc_id, content, metadata, embedding)
                 VALUES (%s, %s, %s, %s)
                 ON CONFLICT (doc_id)
                 DO UPDATE SET content = EXCLUDED.content, metadata = EXCLUDED.metadata, embedding = EXCLUDED.embedding;
@@ -84,7 +84,7 @@ def load_file(path: str) -> str:
 
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=3000,
+    chunk_size=1500,
     chunk_overlap=300,
 )
 
