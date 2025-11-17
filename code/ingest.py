@@ -95,7 +95,12 @@ def ingest(texts: List[str]):
 
     for original_index, text in enumerate(texts):
         chunks = text_splitter.split_text(text)
-        embeddings = OpenAIEmbeddings(api_key=OPENAPI_API_KEY).embed_documents(chunks)
+
+        embedder_model = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            api_key=OPENAPI_API_KEY,
+        )
+        embeddings = embedder_model.embed_documents(chunks)
 
         for i, chunk in enumerate(chunks):
             print(f">>> Ingesting chunk | {i + 1}")
