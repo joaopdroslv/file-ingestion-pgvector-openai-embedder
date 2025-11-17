@@ -1,0 +1,18 @@
+services:
+  file_ingestion_postgres:
+    # image: postgres:15
+    image: ankane/pgvector
+    container_name: file_ingestion_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: my_database
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5442:5432"
+
+
+volumes:
+  pgdata:
