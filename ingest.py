@@ -119,15 +119,16 @@ def main():
     parser.add_argument("--file", help="The path to the PDF/DOCX file.")
     args = parser.parse_args()
 
-    files_contents = []
+    contents = []
     if args.file:
         print(">>> Reading file |", args.file)
-        files_contents.append(load_file(args.file))
+        file_content = load_file(args.file)
+        contents.append(file_content)
 
-    if not files_contents:
-        parser.error("A --file argument is required.")
+    if not contents:
+        parser.error("A --file argument with a valid file path is required.")
 
-    ingest(files_contents)
+    ingest(contents)
 
 
 if __name__ == "__main__":
