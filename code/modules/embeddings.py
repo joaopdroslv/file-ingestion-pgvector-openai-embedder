@@ -20,7 +20,7 @@ def create_embeddings_table() -> None:
                 f"""
             CREATE TABLE IF NOT EXISTS embeddings (
                 id          SERIAL PRIMARY KEY,
-                doc_id      TEXT UNIQUE,
+                chunk_id    TEXT UNIQUE,
                 content     TEXT,
                 metadata    JSONB,
                 embedding   vector({VECTOR_DIMENSION})
@@ -31,21 +31,21 @@ def create_embeddings_table() -> None:
 
 
 def upsert_document(
-    doc_id: str, content: str, metadata: Dict[str, Any], embedding: List[float]
+    chunk_id: str, content: str, metadata: Dict[str, Any], embedding: List[float]
 ) -> None:
     with get_conn() as conn:
         with conn.cursor() as cursor:
             cursor.execute(
                 """
-                INSERT INTO embeddings (doc_id, content, metadata, embedding)
+                INSERT INTO embeddings (chunk_id, content, metadata, embedding)
                 VALUES (%s, %s, %s, %s)
-                ON CONFLICT (doc_id)
+                ON CONFLICT (chunk_id)
                 DO UPDATE
                     SET content = EXCLUDED.content,
                         metadata = EXCLUDED.metadata,
                         embedding = EXCLUDED.embedding;
                 """,
-                (doc_id, content, Json(metadata), Vector(embedding)),
+                (chunk_id, content, Json(metadata), Vector(embedding)),
             )
             conn.commit()
 

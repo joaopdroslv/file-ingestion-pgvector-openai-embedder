@@ -16,24 +16,26 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 def ingest(texts: List[str]) -> None:
 
-    for original_index, text in enumerate(texts):
-        chunks = text_splitter.split_text(text)
+    for text in texts:
 
+        chunks = text_splitter.split_text(text)
         embeddings = embedder_model.embed_documents(chunks)
+        document_id = str(uuid.uuid4())
 
         for i, chunk in enumerate(chunks):
+
             print(f">>> Ingesting chunk | {i + 1}")
+
             embedded_chunk = embeddings[i]
+            chunk_id = str(uuid.uuid4())
+            metadata = {"document_id": document_id, "chunk_index": i}
 
             if len(embedded_chunk) != VECTOR_DIMENSION:
                 raise RuntimeError(
                     f"Embedding with dimension greater than {VECTOR_DIMENSION}."
                 )
 
-            doc_id = f"{uuid.uuid4()}"
-            metadata = {"source_index": original_index, "chunk_index": i}
-
-            upsert_document(doc_id, chunk, metadata, embedded_chunk)
+            upsert_document(chunk_id, chunk, metadata, embedded_chunk)
 
     print(f">>> Ingested {len(texts)} documents (expanded to chunks and stored).")
 
