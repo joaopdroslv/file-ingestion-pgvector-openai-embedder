@@ -20,11 +20,11 @@ if __name__ == "__main__":
 
             document_id = row[0] if row else None
 
-    embeddings = get_all_embeddings_from_a_document(document_id=document_id)
+    result = get_all_embeddings_from_a_document(document_id=document_id)
 
     print(f'>>> Displaying all available embeddings for document_id="{document_id}"')
 
-    for embedding in embeddings:
+    for embedding in result.embeddings:
         print(f">>> Embedding with ID [ {embedding.id} ]")
         print(f"\tContent Length [ {len(embedding.content)} ]")
         print(">>> Embedding Metadata")

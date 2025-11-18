@@ -1,7 +1,11 @@
 from code.config.env_variables import VECTOR_DIMENSION
 from code.database.connection import get_conn
 from code.models.embedder_model import embedder_model
-from code.schemas.embeddings import EmbeddingMetadata, SimplifiedEmbedding
+from code.schemas.embeddings import (
+    EmbeddingMetadata,
+    SimplifiedEmbedding,
+    SimplifiedEmbeddings,
+)
 from typing import Any, Dict, List
 
 from pgvector import Vector
@@ -51,7 +55,7 @@ def upsert_document(
             conn.commit()
 
 
-def get_all_embeddings_from_a_document(document_id: str) -> List[SimplifiedEmbedding]:
+def get_all_embeddings_from_a_document(document_id: str) -> SimplifiedEmbeddings:
 
     sql = """
         SELECT
