@@ -50,6 +50,29 @@ def upsert_document(
             conn.commit()
 
 
+def get_all_embeddings_from_a_document(document_id: str) -> List[Dict[str, Any]]:
+
+    sql = """
+        SELECT
+            id,
+            content,
+            metadata
+        FROM embeddings
+        WHERE metadata->>'document_id' = %s
+        ORDER BY (metadata->>'chunk_index')::INT ASC
+    """
+
+    with get_conn() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(sql, [document_id])
+            embeddings = cursor.fetchall()
+
+    return [
+        {"id": emb[0], "content": emb[1], "metadata": emb[2]}
+        for emb in embeddings
+    ]
+
+
 def get_embedding_cousine_distance(
     query: str, limit: int = 5, metadata: Dict = None
 ) -> List[Dict[str, Any]]:
