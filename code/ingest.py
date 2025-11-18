@@ -8,7 +8,7 @@ import psycopg2
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from psycopg2.extras import Json
 
-from code.config import VECTOR_DIMENSION, DATABASE_URL
+from code.config.env_variables import VECTOR_DIMENSION, DATABASE_URL
 from code.models.embedder_model import embedder_model
 
 

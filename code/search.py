@@ -1,29 +1,14 @@
-import argparse
 import json
-import os
-import uuid
 from typing import Any, Dict, List
 
-import docx
-import pdfplumber
 import psycopg2
-from dotenv import load_dotenv
-from langchain_openai.embeddings import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from psycopg2.extras import Json
 
-load_dotenv()
-
-VECTOR_DIMENSION = int(os.getenv("VECTOR_DIMENSION"))
-DATABASE_URL = os.getenv("DATABASE_URL")
-OPENAPI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not OPENAPI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY environment variable not found.")
+from code.models.embedder_model import embedder_model
+from code.config.env_variables import DATABASE_URL
 
 
-def search_pgvector(query: str, limit: int = 5, metadata_filter: Dict = None):
-    embedder_model = OpenAIEmbeddings(model="text-embedding-3-small", api_key=OPENAPI_API_KEY)
+def search_pgvector(query: str, limit: int = 5, metadata_filter: Dict = None) -> List[Dict[str, Any]]:
+
     query_vector = embedder_model.embed_query(query)
 
     def to_pgvector(vec):
