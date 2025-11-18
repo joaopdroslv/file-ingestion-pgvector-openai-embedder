@@ -1,8 +1,8 @@
+from code.config.env_variables import VECTOR_DIMENSION
+from code.database.connection import get_conn
 from typing import Any, Dict, List
 
 from psycopg2.extras import Json
-from code.config.env_variables import VECTOR_DIMENSION
-from code.database.connection import get_conn
 
 
 def ensure_table():
