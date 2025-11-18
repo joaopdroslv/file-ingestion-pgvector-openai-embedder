@@ -1,6 +1,7 @@
 from code.config.env_variables import VECTOR_DIMENSION
 from code.database.connection import get_conn
 from code.models.embedder_model import embedder_model
+from code.schemas.embeddings import EmbeddingMetadata, SimplifiedEmbedding
 from typing import Any, Dict, List
 
 from pgvector import Vector
@@ -50,7 +51,7 @@ def upsert_document(
             conn.commit()
 
 
-def get_all_embeddings_from_a_document(document_id: str) -> List[Dict[str, Any]]:
+def get_all_embeddings_from_a_document(document_id: str) -> List[SimplifiedEmbedding]:
 
     sql = """
         SELECT
@@ -67,7 +68,14 @@ def get_all_embeddings_from_a_document(document_id: str) -> List[Dict[str, Any]]
             cursor.execute(sql, [document_id])
             embeddings = cursor.fetchall()
 
-    return [{"id": emb[0], "content": emb[1], "metadata": emb[2]} for emb in embeddings]
+    return [
+        SimplifiedEmbedding(
+            id=row[0],
+            content=row[1],
+            metadata=EmbeddingMetadata.from_dict(row[2]),
+        )
+        for row in embeddings
+    ]
 
 
 def get_embedding_cousine_distance(
