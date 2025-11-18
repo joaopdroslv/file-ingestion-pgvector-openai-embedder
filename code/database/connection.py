@@ -2,6 +2,7 @@ from code.config.env_variables import DATABASE_URL
 from contextlib import contextmanager
 
 import psycopg2
+from pgvector.psycopg2 import register_vector
 
 # @contextmanager
 # def get_conn():
@@ -19,4 +20,6 @@ import psycopg2
 
 
 def get_conn():
-    return psycopg2.connect(DATABASE_URL)
+    connection =  psycopg2.connect(DATABASE_URL)
+    register_vector(connection)
+    return connection
