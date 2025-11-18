@@ -1,3 +1,5 @@
+from typing import Optional
+
 import docx
 import pdfplumber
 
@@ -16,7 +18,7 @@ def read_docx_file(path: str) -> str:
     return "\n".join(paragraphs)
 
 
-def load_file(path: str) -> str:
+def load_file(path: str) -> Optional[str]:
     if path.lower().endswith(".pdf"):
         return read_pdf_file(path)
     elif path.lower().endswith(".docx") or path.lower().endswith(".doc"):

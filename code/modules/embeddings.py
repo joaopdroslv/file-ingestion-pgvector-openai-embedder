@@ -5,10 +5,16 @@ from typing import Any, Dict, List
 from psycopg2.extras import Json
 
 
-def ensure_table():
+def ensure_database_struct_exists() -> None:
+    """Wrapper function to create all tables/database structure."""
+
+    create_embeddings_table()
+
+
+def create_embeddings_table() -> None:
     with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
+        with conn.cursor() as cursor:
+            cursor.execute(
                 f"""
             CREATE TABLE IF NOT EXISTS embeddings (
                 id          SERIAL PRIMARY KEY,
@@ -24,10 +30,10 @@ def ensure_table():
 
 def upsert_document(
     doc_id: str, content: str, metadata: Dict[str, Any], embedding: List[float]
-):
+) -> None:
     with get_conn() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
+        with conn.cursor() as cursor:
+            cursor.execute(
                 """
                 INSERT INTO embeddings (doc_id, content, metadata, embedding)
                 VALUES (%s, %s, %s, %s)

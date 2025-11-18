@@ -2,7 +2,7 @@ import argparse
 import uuid
 from code.config.env_variables import VECTOR_DIMENSION
 from code.models.embedder_model import embedder_model
-from code.modules.embeddings import ensure_table, upsert_document
+from code.modules.embeddings import ensure_database_struct_exists, upsert_document
 from code.modules.files import load_file
 from typing import List
 
@@ -14,9 +14,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 
-def ingest(texts: List[str]):
-
-    ensure_table()
+def ingest(texts: List[str]) -> None:
 
     for original_index, text in enumerate(texts):
         chunks = text_splitter.split_text(text)
@@ -40,7 +38,10 @@ def ingest(texts: List[str]):
     print(f">>> Ingested {len(texts)} documents (expanded to chunks and stored).")
 
 
-def main():
+def main() -> None:
+
+    ensure_database_struct_exists()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", help="The path to the PDF/DOCX file.")
     args = parser.parse_args()
