@@ -1,4 +1,5 @@
 import argparse
+import os
 import uuid
 from code.config.env_variables import VECTOR_DIMENSION
 from code.models.embedder_model import embedder_model
@@ -46,16 +47,41 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--file", help="The path to the PDF/DOCX file.")
+    parser.add_argument(
+        "--all",
+        help="The path to a folder containing multiple documents to be ingested.",
+    )
     args = parser.parse_args()
 
     contents = []
+
     if args.file:
         print(">>> Reading file |", args.file)
         file_content = load_file(args.file)
         contents.append(file_content)
 
+    if args.all:
+        folder = args.all
+
+        if not os.path.isdir(folder):
+            parser.error(f"--all must be a valid folder, got: {folder}")
+
+        print(">>> Reading all documents in folder |", folder)
+
+        for f in os.listdir(folder):
+            full_path = os.path.join(folder, f)
+
+            if not os.path.isfile(full_path):
+                continue
+
+            if f.lower().endswith((".pdf", ".docx")):
+                print(">>> Reading file |", full_path)
+
+                file_content = load_file(full_path)
+                contents.append(file_content)
+
     if not contents:
-        parser.error("A --file argument with a valid file path is required.")
+        parser.error("Nothing to ingest, ending script.")
 
     ingest(contents)
 

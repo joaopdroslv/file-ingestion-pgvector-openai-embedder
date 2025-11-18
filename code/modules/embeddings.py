@@ -67,10 +67,7 @@ def get_all_embeddings_from_a_document(document_id: str) -> List[Dict[str, Any]]
             cursor.execute(sql, [document_id])
             embeddings = cursor.fetchall()
 
-    return [
-        {"id": emb[0], "content": emb[1], "metadata": emb[2]}
-        for emb in embeddings
-    ]
+    return [{"id": emb[0], "content": emb[1], "metadata": emb[2]} for emb in embeddings]
 
 
 def get_embedding_cousine_distance(
