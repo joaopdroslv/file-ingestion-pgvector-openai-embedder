@@ -1,5 +1,7 @@
 import argparse
 import uuid
+from code.config.env_variables import DATABASE_URL, VECTOR_DIMENSION
+from code.models.embedder_model import embedder_model
 from typing import Any, Dict, List
 
 import docx
@@ -7,9 +9,6 @@ import pdfplumber
 import psycopg2
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from psycopg2.extras import Json
-
-from code.config.env_variables import VECTOR_DIMENSION, DATABASE_URL
-from code.models.embedder_model import embedder_model
 
 
 def get_conn():

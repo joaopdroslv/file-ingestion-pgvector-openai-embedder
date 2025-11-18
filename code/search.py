@@ -1,13 +1,14 @@
 import json
+from code.config.env_variables import DATABASE_URL
+from code.models.embedder_model import embedder_model
 from typing import Any, Dict, List
 
 import psycopg2
 
-from code.models.embedder_model import embedder_model
-from code.config.env_variables import DATABASE_URL
 
-
-def search_pgvector(query: str, limit: int = 5, metadata_filter: Dict = None) -> List[Dict[str, Any]]:
+def search_pgvector(
+    query: str, limit: int = 5, metadata_filter: Dict = None
+) -> List[Dict[str, Any]]:
 
     query_vector = embedder_model.embed_query(query)
 
