@@ -1,25 +1,15 @@
 import argparse
-import json
-import os
 import uuid
 from typing import Any, Dict, List
 
 import docx
 import pdfplumber
 import psycopg2
-from dotenv import load_dotenv
-from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from psycopg2.extras import Json
 
-load_dotenv()
-
-VECTOR_DIMENSION = int(os.getenv("VECTOR_DIMENSION"))
-DATABASE_URL = os.getenv("DATABASE_URL")
-OPENAPI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-if not OPENAPI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY environment variable not found.")
+from code.config import VECTOR_DIMENSION, DATABASE_URL
+from code.models.embedder_model import embedder_model
 
 
 def get_conn():
@@ -96,10 +86,6 @@ def ingest(texts: List[str]):
     for original_index, text in enumerate(texts):
         chunks = text_splitter.split_text(text)
 
-        embedder_model = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=OPENAPI_API_KEY,
-        )
         embeddings = embedder_model.embed_documents(chunks)
 
         for i, chunk in enumerate(chunks):
