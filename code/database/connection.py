@@ -20,6 +20,6 @@ from pgvector.psycopg2 import register_vector
 
 
 def get_conn():
-    connection =  psycopg2.connect(DATABASE_URL)
+    connection = psycopg2.connect(DATABASE_URL)
     register_vector(connection)
     return connection

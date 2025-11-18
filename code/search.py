@@ -1,7 +1,5 @@
 import json
-
 from code.modules.embeddings import get_embedding_cousine_distance
-
 
 if __name__ == "__main__":
     query = input("Type something to search: ")

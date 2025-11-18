@@ -1,11 +1,10 @@
 from code.config.env_variables import VECTOR_DIMENSION
 from code.database.connection import get_conn
+from code.models.embedder_model import embedder_model
 from typing import Any, Dict, List
 
-from psycopg2.extras import Json
 from pgvector import Vector
-
-from code.models.embedder_model import embedder_model
+from psycopg2.extras import Json
 
 
 def ensure_database_struct_exists() -> None:
